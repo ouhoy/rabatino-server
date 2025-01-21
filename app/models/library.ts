@@ -6,7 +6,6 @@ export default class Library extends EducationalInstitution {
   @column()
   declare educationalInstitutionId: number
 
-
   @column()
   declare bookCount: number
 

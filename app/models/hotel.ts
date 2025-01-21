@@ -1,7 +1,11 @@
-import { column } from '@adonisjs/lucid/orm'
+import { belongsTo, column } from '@adonisjs/lucid/orm'
 import Tourism from '#models/tourism'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Hotel extends Tourism {
+  @column()
+  declare tourismPostId: number
+
   @column()
   declare amenities: string[]
 
@@ -16,4 +20,7 @@ export default class Hotel extends Tourism {
 
   @column()
   declare checkInTime: string
+
+  @belongsTo(() => Tourism)
+  declare post: BelongsTo<typeof Tourism>
 }
