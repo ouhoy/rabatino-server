@@ -1,6 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import College from '#models/college'
 import { collegeValidator } from '#validators/education'
+import Post from '#models/post'
+import { postValidator } from '#validators/post'
+import EducationalInstitution from '#models/educational_institution'
+import { educationalInstitutionValidator } from '#validators/educational_institution'
 
 export default class CollegesController {
   /**
@@ -18,9 +22,20 @@ export default class CollegesController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const data = await request.validateUsing(collegeValidator)
+    const postData = await request.validateUsing(postValidator)
+    const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
+    const collegeData = await request.validateUsing(collegeValidator)
 
-    const post = await College.create(data)
+    const createdPost = await Post.create(postData)
+    const educationalInstitution = await EducationalInstitution.create({
+      ...educationalInstitutionData,
+      postId: createdPost.id,
+    })
+
+    const post = await College.create({
+      ...collegeData,
+      educationalInstitutionId: educationalInstitution.id,
+    })
     response.ok(post)
   }
 
@@ -28,12 +43,25 @@ export default class CollegesController {
    * Handle form submission for the edit action
    */
   async update({ request, response, params }: HttpContext) {
-    const data = await request.validateUsing(collegeValidator)
-    const postId = params.id
+    const postData = await request.validateUsing(postValidator)
+    const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
+    const collegeData = await request.validateUsing(collegeValidator)
 
-    const post = await College.findOrFail(postId)
-    post.merge(data)
-    await post.save()
+    // First find the college record
+    const college = await College.findOrFail(params.id)
+
+    // Find and update the educational institution
+    const educationalInstitution = await EducationalInstitution.findOrFail(
+      college.educationalInstitutionId
+    )
+
+    // Find and update the base post
+    const post = await Post.findOrFail(educationalInstitution.postId)
+
+    // Update all three models
+    await post.merge(postData).save()
+    await educationalInstitution.merge(educationalInstitutionData).save()
+    await college.merge(collegeData).save()
 
     response.ok(post)
   }
@@ -42,10 +70,18 @@ export default class CollegesController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
-    const postId = params.id
-    const post = await College.findOrFail(postId)
-    await post.incrementViews()
-    return response.ok(post)
+    const college = await College.query()
+      .where('id', params.id)
+      .preload('educationalInstitution', (query) => {
+        query.preload('post')
+      })
+      .firstOrFail()
+
+    // Increment views on the base post
+    await college.educationalInstitution.post.incrementViews()
+
+    // Merge all data for complete response
+    return response.ok(college)
   }
 
   /**
@@ -53,7 +89,7 @@ export default class CollegesController {
    */
   async destroy({ params, response }: HttpContext) {
     const postId = params.id
-    const post = await College.findOrFail(postId)
+    const post = await Post.findOrFail(postId)
     await post.delete()
     return response.ok(true)
   }

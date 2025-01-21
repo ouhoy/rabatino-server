@@ -16,7 +16,7 @@ export default class extends BaseSchema {
         .notNullable()
       table.boolean('is_verified').defaultTo(false)
       table.boolean('private').defaultTo(false)
-      table.enum('type', Object.values(InstitutionType)).notNullable()
+      table.enum('institutionType', Object.values(InstitutionType)).notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

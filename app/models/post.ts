@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import User from '#models/user'
+import PostType from '#models/post_type'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { PostType as PostTypeEnum } from '#enums/post_type_enum'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -15,6 +17,9 @@ export default class Post extends BaseModel {
 
   @column()
   declare userId: number
+
+  @column()
+  declare typeId: PostTypeEnum
 
   @column()
   declare address: string
@@ -56,4 +61,7 @@ export default class Post extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => PostType)
+  declare type: BelongsTo<typeof PostType>
 }

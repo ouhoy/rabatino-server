@@ -4,6 +4,7 @@ import { InstitutionType } from '#enums/educational_institution_enum'
 // Base Post validator schema
 const postSchema = {
   title: vine.string(),
+  userId: vine.number(),
   description: vine.string(),
   address: vine.string(),
   latitude: vine.number(),
@@ -38,7 +39,6 @@ export const universityValidator = vine.compile(
 // College validator
 export const collegeValidator = vine.compile(
   vine.object({
-    ...educationalInstitutionSchema,
     departments: vine.array(vine.string()),
     specialization: vine.string(),
     affiliation: vine.string(),
@@ -82,7 +82,3 @@ export const libraryValidator = vine.compile(
   })
 )
 
-// Base Educational Institution validator for shared operations
-export const educationalInstitutionValidator = vine.compile(
-  vine.object(educationalInstitutionSchema)
-)

@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.text('description').notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('type_id').unsigned().references('id').inTable('post_types').onDelete('CASCADE')
       table.string('address').notNullable()
       table.decimal('latitude', 10, 8).notNullable()
       table.decimal('longitude', 11, 8).notNullable()
