@@ -14,9 +14,6 @@ export default class Post extends BaseModel {
   declare description: string
 
   @column()
-  declare images: string[]
-
-  @column()
   declare userId: number
 
   @column()

@@ -1,0 +1,7 @@
+export enum TourismType {
+  HOTEL = 'HOTEL',
+  RESTAURANT = 'RESTAURANT',
+  ATTRACTION = 'ATTRACTION',
+  THEATER = 'THEATER',
+  BANK = 'BANK',
+}
