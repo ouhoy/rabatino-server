@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 
 // Base Post validator schema
-const postSchema = {
+export const postSchema = {
   title: vine.string(),
   userId: vine.number(),
   typeId: vine.number(),

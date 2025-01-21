@@ -1,27 +1,5 @@
 import vine from '@vinejs/vine'
-import { InstitutionType } from '#enums/educational_institution_enum'
-
-// Base Post validator schema
-const postSchema = {
-  title: vine.string(),
-  userId: vine.number(),
-  description: vine.string(),
-  address: vine.string(),
-  latitude: vine.number(),
-  longitude: vine.number(),
-  website: vine.string().optional(),
-  phone: vine.string().optional(),
-  email: vine.string().email().optional(),
-  featuredImage: vine.string(),
-}
-
-// Base Educational Institution validator schema
-const educationalInstitutionSchema = {
-  ...postSchema,
-  isVerified: vine.boolean(),
-  private: vine.boolean(),
-  type: vine.enum(Object.values(InstitutionType)),
-}
+import { educationalInstitutionSchema } from '#validators/educational_institution'
 
 // University validator
 export const universityValidator = vine.compile(
@@ -50,7 +28,6 @@ export const collegeValidator = vine.compile(
 // Study Center validator
 export const studyCenterValidator = vine.compile(
   vine.object({
-    ...educationalInstitutionSchema,
     capacity: vine.number().min(1),
     amenities: vine.array(vine.string()),
     hourlyRateRange: vine.array(vine.number()),
@@ -62,7 +39,6 @@ export const studyCenterValidator = vine.compile(
 // Coaching Center validator
 export const coachingCenterValidator = vine.compile(
   vine.object({
-    ...educationalInstitutionSchema,
     specialty: vine.string(),
     courses: vine.array(vine.string()),
     schedule: vine.string(),
@@ -81,4 +57,3 @@ export const libraryValidator = vine.compile(
     hasStudyRooms: vine.boolean(),
   })
 )
-

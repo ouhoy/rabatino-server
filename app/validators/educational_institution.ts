@@ -2,7 +2,7 @@ import vine from '@vinejs/vine'
 import { InstitutionType } from '#enums/educational_institution_enum'
 
 // Base Educational Institution validator schema
-const educationalInstitutionSchema = {
+export const educationalInstitutionSchema = {
   isVerified: vine.boolean(),
   private: vine.boolean(),
   institutionType: vine.enum(Object.values(InstitutionType)),

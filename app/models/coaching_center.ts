@@ -4,6 +4,9 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class CoachingCenter extends EducationalInstitution {
   @column()
+  declare educationalInstitutionId: number
+
+  @column()
   declare specialty: string
 
   @column()
