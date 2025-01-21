@@ -9,10 +9,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table
-        .integer('post_id')
+        .integer('tourism_posts_id')
         .unsigned()
         .references('id')
-        .inTable('posts')
+        .inTable('tourism_posts')
         .onDelete('CASCADE')
         .notNullable()
       table.string('attraction_type').notNullable()

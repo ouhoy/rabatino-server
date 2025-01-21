@@ -2,7 +2,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 import { TourismType } from '#enums/tourism_enum'
 
 export default class extends BaseSchema {
-  protected tableName = 'tourisms'
+  protected tableName = 'tourism_posts'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
