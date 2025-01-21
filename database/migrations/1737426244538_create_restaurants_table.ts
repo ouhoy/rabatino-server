@@ -6,7 +6,19 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
+      table
+        .integer('tourism_id')
+        .unsigned()
+        .references('id')
+        .inTable('tourism')
+        .onDelete('CASCADE')
+        .notNullable()
+      table.string('cuisine').notNullable()
+      table.string('price_ranges').notNullable()
+      table.string('menus').notNullable()
+      table.string('opening_hours').notNullable()
+      table.boolean('takeout').defaultTo(false)
+      table.boolean('delivery').defaultTo(false)
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

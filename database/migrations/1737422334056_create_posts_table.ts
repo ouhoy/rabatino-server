@@ -6,7 +6,16 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
+      table.string('title').notNullable()
+      table.text('description').notNullable()
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.string('address').notNullable()
+      table.decimal('latitude', 10, 8).notNullable()
+      table.decimal('longitude', 11, 8).notNullable()
+      table.string('website').nullable()
+      table.string('phone').nullable()
+      table.string('email').nullable()
+      table.string('featured_image').notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
