@@ -1,5 +1,7 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
+// Fixed the migration file
+
 export default class extends BaseSchema {
   protected tableName = 'tourist_attractions'
 
@@ -7,10 +9,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table
-        .integer('tourism_id')
+        .integer('post_id')
         .unsigned()
         .references('id')
-        .inTable('tourism')
+        .inTable('posts')
         .onDelete('CASCADE')
         .notNullable()
       table.string('attraction_type').notNullable()
