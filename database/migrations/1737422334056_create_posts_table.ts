@@ -14,6 +14,7 @@ export default class extends BaseSchema {
       table.decimal('longitude', 11, 8).notNullable()
       table.string('website').nullable()
       table.string('phone').nullable()
+      table.integer('views').defaultTo(0)
       table.string('email').nullable()
       table.string('featured_image').notNullable()
       table.timestamp('created_at')

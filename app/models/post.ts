@@ -35,6 +35,17 @@ export default class Post extends BaseModel {
   declare email?: string
 
   @column()
+  declare views: number
+
+  /**
+   * Increment view count for the post
+   */
+  public async incrementViews() {
+    this.views += 1
+    await this.save()
+  }
+
+  @column()
   declare featuredImage: string
 
   @column.dateTime({ autoCreate: true })

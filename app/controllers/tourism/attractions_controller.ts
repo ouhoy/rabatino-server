@@ -44,6 +44,7 @@ export default class AttractionsController {
   async show({ params, response }: HttpContext) {
     const postId = params.id
     const post = await TouristAttraction.findOrFail(postId)
+    await post.incrementViews()
     return response.ok(post)
   }
 

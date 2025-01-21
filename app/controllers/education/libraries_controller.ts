@@ -44,6 +44,7 @@ export default class LibrariesController {
   async show({ params, response }: HttpContext) {
     const postId = params.id
     const post = await Library.findOrFail(postId)
+    await post.incrementViews()
     return response.ok(post)
   }
 

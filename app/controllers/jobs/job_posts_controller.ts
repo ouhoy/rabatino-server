@@ -44,6 +44,7 @@ export default class JobPostsController {
   async show({ params, response }: HttpContext) {
     const postId = params.id
     const post = await JobPost.findOrFail(postId)
+    await post.incrementViews()
     return response.ok(post)
   }
 

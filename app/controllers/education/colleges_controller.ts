@@ -44,6 +44,7 @@ export default class CollegesController {
   async show({ params, response }: HttpContext) {
     const postId = params.id
     const post = await College.findOrFail(postId)
+    await post.incrementViews()
     return response.ok(post)
   }
 

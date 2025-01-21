@@ -44,6 +44,7 @@ export default class RestaurantsController {
   async show({ params, response }: HttpContext) {
     const postId = params.id
     const post = await Restaurant.findOrFail(postId)
+    await post.incrementViews()
     return response.ok(post)
   }
 
