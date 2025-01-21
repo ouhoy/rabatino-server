@@ -69,6 +69,19 @@ export const coachingCenterValidator = vine.compile(
   })
 )
 
+// Library validator
+export const libraryValidator = vine.compile(
+  vine.object({
+    ...educationalInstitutionSchema,
+    bookCount: vine.number().min(0),
+    sections: vine.array(vine.string()),
+    hasDigitalAccess: vine.boolean(),
+    operationHours: vine.string(),
+    hasPrinting: vine.boolean(),
+    hasStudyRooms: vine.boolean(),
+  })
+)
+
 // Base Educational Institution validator for shared operations
 export const educationalInstitutionValidator = vine.compile(
   vine.object(educationalInstitutionSchema)
