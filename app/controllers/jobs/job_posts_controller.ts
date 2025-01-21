@@ -1,6 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import JobPost from '#models/job_post'
 import { jobPostValidator } from '#validators/job_post'
+import { postValidator } from '#validators/post'
+import Post from '#models/post'
 
 export default class JobPostsController {
   /**
@@ -18,9 +20,15 @@ export default class JobPostsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const data = await request.validateUsing(jobPostValidator)
+    const postData = await request.validateUsing(postValidator)
+    const jobData = await request.validateUsing(jobPostValidator)
 
-    const post = await JobPost.create(data)
+    const createdPost = await Post.create(postData)
+
+    const post = await JobPost.create({
+      ...jobData,
+      postId: createdPost.id,
+    })
     response.ok(post)
   }
 
@@ -28,12 +36,18 @@ export default class JobPostsController {
    * Handle form submission for the edit action
    */
   async update({ request, response, params }: HttpContext) {
-    const data = await request.validateUsing(jobPostValidator)
-    const postId = params.id
+    const postData = await request.validateUsing(postValidator)
+    const jobData = await request.validateUsing(jobPostValidator)
 
-    const post = await JobPost.findOrFail(postId)
-    post.merge(data)
-    await post.save()
+    // First find the job post record
+    const jobPost = await JobPost.findOrFail(params.id)
+
+    // Find and update the base post
+    const post = await Post.findOrFail(jobPost.postId)
+
+    // Update all three models
+    await post.merge(postData).save()
+    await jobPost.merge(jobData).save()
 
     response.ok(post)
   }
@@ -42,10 +56,12 @@ export default class JobPostsController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
-    const postId = params.id
-    const post = await JobPost.findOrFail(postId)
-    await post.incrementViews()
-    return response.ok(post)
+    const jobPost = await JobPost.query().where('postId', params.id).preload('post').firstOrFail()
+
+    // Increment views
+    await jobPost.post.incrementViews()
+    // Merge all data for complete response
+    return response.ok(jobPost)
   }
 
   /**
@@ -53,7 +69,7 @@ export default class JobPostsController {
    */
   async destroy({ params, response }: HttpContext) {
     const postId = params.id
-    const post = await JobPost.findOrFail(postId)
+    const post = await Post.findOrFail(postId)
     await post.delete()
     return response.ok(true)
   }

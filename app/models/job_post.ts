@@ -1,11 +1,15 @@
-import { column } from '@adonisjs/lucid/orm'
+import { belongsTo, column } from '@adonisjs/lucid/orm'
 import { JobType } from '#enums/job_type_enum'
 import { WorkLocation } from '#enums/work_location_enum'
 import Post from '#models/post'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class JobPost extends Post {
   @column()
   declare company: string
+
+  @column()
+  declare postId: number
 
   @column()
   declare logo: string
@@ -30,4 +34,7 @@ export default class JobPost extends Post {
 
   @column()
   declare isActive: boolean
+
+  @belongsTo(() => Post)
+  declare post: BelongsTo<typeof Post>
 }
