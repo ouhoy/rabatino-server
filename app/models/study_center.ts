@@ -16,7 +16,7 @@ export default class StudyCenter extends EducationalInstitution {
   declare hourlyRateRange: number[]
 
   @column()
-  declare has24Access: boolean
+  declare hasAccess: boolean
 
   @column()
   declare rooms: string[]
