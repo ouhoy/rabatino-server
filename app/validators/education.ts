@@ -1,10 +1,8 @@
 import vine from '@vinejs/vine'
-import { educationalInstitutionSchema } from '#validators/educational_institution'
 
 // University validator
 export const universityValidator = vine.compile(
   vine.object({
-    ...educationalInstitutionSchema,
     faculties: vine.array(vine.string()),
     ranking: vine.string(),
     accreditation: vine.string(),
@@ -48,7 +46,6 @@ export const coachingCenterValidator = vine.compile(
 // Library validator
 export const libraryValidator = vine.compile(
   vine.object({
-    ...educationalInstitutionSchema,
     bookCount: vine.number().min(0),
     sections: vine.array(vine.string()),
     hasDigitalAccess: vine.boolean(),
