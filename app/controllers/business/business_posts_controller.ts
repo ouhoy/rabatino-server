@@ -2,7 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import BusinessPost from '#models/business_post'
 import { businessPostValidator } from '#validators/business_post'
 
-export default class PostsController {
+export default class BusinessPostsController {
   /**
    * Display a list of resource
    */

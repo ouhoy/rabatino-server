@@ -2,7 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import JobPost from '#models/job_post'
 import { jobPostValidator } from '#validators/job_post'
 
-export default class JobsController {
+export default class JobPostsController {
   /**
    * Display a list of resource
    */
