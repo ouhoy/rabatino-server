@@ -1,6 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Hotel from '#models/hotel'
-import { hotelValidator } from '#validators/tourism'
+import { hotelValidator, tourismValidator } from '#validators/tourism'
+import { postValidator } from '#validators/post'
+import Post from '#models/post'
+import TourismPost from '#models/tourism_post'
 
 export default class HotelsController {
   /**
@@ -18,9 +21,20 @@ export default class HotelsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const data = await request.validateUsing(hotelValidator)
+    const postData = await request.validateUsing(postValidator)
+    const tourismContainer = await request.validateUsing(tourismValidator)
+    const tourismAttraction = await request.validateUsing(hotelValidator)
 
-    const post = await Hotel.create(data)
+    const createdPost = await Post.create(postData)
+    const tourismPost = await TourismPost.create({
+      ...tourismContainer,
+      postId: createdPost.id,
+    })
+
+    const post = await Hotel.create({
+      ...tourismAttraction,
+      tourismPostId: tourismPost.id,
+    })
     response.ok(post)
   }
 
@@ -28,12 +42,23 @@ export default class HotelsController {
    * Handle form submission for the edit action
    */
   async update({ request, response, params }: HttpContext) {
-    const data = await request.validateUsing(hotelValidator)
-    const postId = params.id
+    const postData = await request.validateUsing(postValidator)
+    const tourismContainer = await request.validateUsing(tourismValidator)
+    const tourismAttractionPost = await request.validateUsing(hotelValidator)
 
-    const post = await Hotel.findOrFail(postId)
-    post.merge(data)
-    await post.save()
+    // First find the college record
+    const college = await Hotel.findOrFail(params.id)
+
+    // Find and update the educational institution
+    const educationalInstitution = await TourismPost.findOrFail(college.tourismPostId)
+
+    // Find and update the base post
+    const post = await Post.findOrFail(educationalInstitution.postId)
+
+    // Update all three models
+    await post.merge(postData).save()
+    await educationalInstitution.merge(tourismContainer).save()
+    await college.merge(tourismAttractionPost).save()
 
     response.ok(post)
   }
@@ -42,10 +67,18 @@ export default class HotelsController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
-    const postId = params.id
-    const post = await Hotel.findOrFail(postId)
-    await post.incrementViews()
-    return response.ok(post)
+    const attraction = await Hotel.query()
+      .where('id', params.id)
+      .preload('touristAttraction', (query) => {
+        query.preload('post')
+      })
+      .firstOrFail()
+
+    // Increment views
+    await attraction.touristAttraction.post.incrementViews()
+
+    // Merge all data for complete response
+    return response.ok(attraction)
   }
 
   /**
@@ -53,7 +86,7 @@ export default class HotelsController {
    */
   async destroy({ params, response }: HttpContext) {
     const postId = params.id
-    const post = await Hotel.findOrFail(postId)
+    const post = await Post.findOrFail(postId)
     await post.delete()
     return response.ok(true)
   }
