@@ -67,18 +67,54 @@ export default class AttractionsController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
+    // 1. Find base Post
+    const post = await Post.findOrFail(params.id)
+
+    // 2. Find Tourism post
+    const tourismPost = await TourismPost.query().where('postId', post.id).firstOrFail()
+
+    // 3. Find Tourist Attraction with relationships
     const attraction = await TouristAttraction.query()
-      .where('id', params.id)
-      .preload('touristAttraction', (query) => {
-        query.preload('post')
-      })
+      .where('tourismPostId', tourismPost.id)
       .firstOrFail()
 
-    // Increment views
-    await attraction.touristAttraction.post.incrementViews()
+    // 4. Increment views
+    await post.incrementViews()
 
-    // Merge all data for complete response
-    return response.ok(attraction)
+    // 5. Flatten data structure
+    const flattenedData = {
+      // Post data
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      userId: post.userId,
+      typeId: post.typeId,
+      address: post.address,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      website: post.website,
+      phone: post.phone,
+      email: post.email,
+      views: post.views,
+      featuredImage: post.featuredImage,
+
+      // Tourism post data
+      isActive: tourismPost.isActive,
+      rating: tourismPost.rating,
+      tourismType: tourismPost.tourismType,
+
+      // Attraction specific data
+      attractionType: attraction.attractionType,
+      bestVisitTime: attraction.bestVisitTime,
+      entryFee: attraction.entryFee,
+      openingHours: attraction.openingHours,
+      guideTours: attraction.guideTours,
+
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    }
+
+    return response.ok(flattenedData)
   }
 
   /**
