@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 
+const PostsController = () => import('#controllers/posts_controller')
 const UniversitiesController = () => import('#controllers/education/universities_controller')
 const CollegesController = () => import('#controllers/education/colleges_controller')
 const LibrariesController = () => import('#controllers/education/libraries_controller')
@@ -138,3 +139,10 @@ router
       .prefix('/attractions')
   })
   .prefix('/tourism')
+
+router
+  .group(() => {
+    router.get('/', [PostsController, 'index'])
+    router.delete('/:D', [PostsController, 'destroy'])
+  })
+  .prefix('/posts')
