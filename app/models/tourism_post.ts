@@ -3,7 +3,7 @@ import Post from '#models/post'
 import { TourismType } from '#enums/tourism_enum'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
-export default class Tourism extends Post {
+export default class TourismPost extends Post {
   @column()
   declare postId: number
 

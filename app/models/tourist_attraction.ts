@@ -1,8 +1,8 @@
 import { belongsTo, column } from '@adonisjs/lucid/orm'
-import Tourism from '#models/tourism'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import TourismPost from '#models/tourism_post'
 
-export default class TouristAttraction extends Tourism {
+export default class TouristAttraction extends TourismPost {
   @column()
   declare tourismPostId: number
 
@@ -21,6 +21,6 @@ export default class TouristAttraction extends Tourism {
   @column()
   declare guideTours: boolean
 
-  @belongsTo(() => Tourism)
-  declare post: BelongsTo<typeof Tourism>
+  @belongsTo(() => TourismPost)
+  declare touristAttraction: BelongsTo<typeof TourismPost>
 }

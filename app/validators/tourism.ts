@@ -1,31 +1,16 @@
 import vine from '@vinejs/vine'
 import { TourismType } from '#enums/tourism_enum'
 
-// Base Post validator schema
-const postSchema = {
-  title: vine.string(),
-  description: vine.string(),
-  address: vine.string(),
-  latitude: vine.number(),
-  longitude: vine.number(),
-  website: vine.string().optional(),
-  phone: vine.string().optional(),
-  email: vine.string().email().optional(),
-  featuredImage: vine.string(),
-}
-
 // Base Tourism validator schema
 const tourismSchema = {
-  ...postSchema,
   isActive: vine.boolean(),
   rating: vine.number().min(0).max(5),
-  type: vine.enum(Object.values(TourismType)),
+  tourismType: vine.enum(Object.values(TourismType)),
 }
 
 // Hotel validator
 export const hotelValidator = vine.compile(
   vine.object({
-    ...tourismSchema,
     amenities: vine.array(vine.string()),
     priceRanges: vine.string(),
     totalRooms: vine.number().min(1),
@@ -37,7 +22,6 @@ export const hotelValidator = vine.compile(
 // Restaurant validator
 export const restaurantValidator = vine.compile(
   vine.object({
-    ...tourismSchema,
     cuisine: vine.string(),
     priceRanges: vine.string(),
     menus: vine.string(),
@@ -50,7 +34,6 @@ export const restaurantValidator = vine.compile(
 // Tourist Attraction validator
 export const touristAttractionValidator = vine.compile(
   vine.object({
-    ...tourismSchema,
     attractionType: vine.string(),
     bestVisitTime: vine.string(),
     entryFee: vine.number().min(0),
