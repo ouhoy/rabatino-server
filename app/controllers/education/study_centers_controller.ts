@@ -70,18 +70,56 @@ export default class StudyCentersController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
-    const college = await StudyCenter.query()
-      .where('id', params.id)
-      .preload('educationalInstitution', (query) => {
-        query.preload('post')
-      })
+    // 1. Find base Post
+    const post = await Post.findOrFail(params.id)
+
+    // 2. Find Educational Institution
+    const educationalInstitution = await EducationalInstitution.query()
+      .where('postId', post.id)
       .firstOrFail()
 
-    // Increment views on the base post
-    await college.educationalInstitution.post.incrementViews()
+    // 3. Find StudyCenter
+    const studyCenter = await StudyCenter.query()
+      .where('educationalInstitutionId', educationalInstitution.id)
+      .firstOrFail()
 
-    // Merge all data for complete response
-    return response.ok(college)
+    // 4. Increment views
+    await post.incrementViews()
+
+    // 5. Flatten data structure
+    const flattenedData = {
+      // Post data
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      userId: post.userId,
+      typeId: post.typeId,
+      address: post.address,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      website: post.website,
+      phone: post.phone,
+      email: post.email,
+      views: post.views,
+      featuredImage: post.featuredImage,
+
+      // Educational Institution data
+      isVerified: educationalInstitution.isVerified,
+      private: educationalInstitution.private,
+      institutionType: educationalInstitution.institutionType,
+
+      // StudyCenter specific data
+      capacity: studyCenter.capacity,
+      amenities: studyCenter.amenities,
+      hourlyRateRange: studyCenter.hourlyRateRange,
+      hasAccess: studyCenter.hasAccess,
+      rooms: studyCenter.rooms,
+
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    }
+
+    return response.ok(flattenedData)
   }
 
   /**

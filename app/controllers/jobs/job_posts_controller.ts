@@ -56,12 +56,48 @@ export default class JobPostsController {
    * Show individual record
    */
   async show({ params, response }: HttpContext) {
-    const jobPost = await JobPost.query().where('postId', params.id).preload('post').firstOrFail()
+    // 1. Find base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Increment views
-    await jobPost.post.incrementViews()
-    // Merge all data for complete response
-    return response.ok(jobPost)
+    // 2. Find Job Post
+    const jobPost = await JobPost.query().where('postId', post.id).firstOrFail()
+
+    // 3. Increment views
+    await post.incrementViews()
+
+    // 4. Flatten data structure
+    const flattenedData = {
+      // Post data
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      userId: post.userId,
+      typeId: post.typeId,
+      address: post.address,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      website: post.website,
+      phone: post.phone,
+      email: post.email,
+      views: post.views,
+      featuredImage: post.featuredImage,
+
+      // Job Post data
+      company: jobPost.company,
+      logo: jobPost.logo,
+      salary: jobPost.salary,
+      jobType: jobPost.jobType,
+      workLocation: jobPost.workLocation,
+      requirements: jobPost.requirements,
+      applicationLink: jobPost.applicationLink,
+      expiryDate: jobPost.expiryDate,
+      isActive: jobPost.isActive,
+
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    }
+
+    return response.ok(flattenedData)
   }
 
   /**
