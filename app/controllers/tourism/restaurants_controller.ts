@@ -44,23 +44,32 @@ export default class RestaurantsController {
   async update({ request, response, params }: HttpContext) {
     const postData = await request.validateUsing(postValidator)
     const tourismContainer = await request.validateUsing(tourismValidator)
-    const tourismAttractionPost = await request.validateUsing(restaurantValidator)
+    const restaurantData = await request.validateUsing(restaurantValidator)
 
-    // First find the college record
-    const college = await Restaurant.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await TourismPost.findOrFail(college.tourismPostId)
+    // 2. Find the Tourism post related to base post
+    const tourismPost = await TourismPost.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the Restaurant related to tourism post
+    const restaurant = await Restaurant.query()
+      .where('tourismPostId', tourismPost.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
-    await educationalInstitution.merge(tourismContainer).save()
-    await college.merge(tourismAttractionPost).save()
+    await tourismPost.merge(tourismContainer).save()
+    await restaurant.merge(restaurantData).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...tourismPost.toJSON(),
+      ...restaurant.toJSON(),
+    })
   }
 
   /**

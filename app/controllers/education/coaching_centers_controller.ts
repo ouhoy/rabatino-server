@@ -24,7 +24,7 @@ export default class CoachingCentersController {
   async store({ request, response }: HttpContext) {
     const postData = await request.validateUsing(postValidator)
     const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
-    const collegeData = await request.validateUsing(coachingCenterValidator)
+    const coachingCenterData = await request.validateUsing(coachingCenterValidator)
 
     const createdPost = await Post.create(postData)
     const educationalInstitution = await EducationalInstitution.create({
@@ -33,7 +33,7 @@ export default class CoachingCentersController {
     })
 
     const post = await CoachingCenter.create({
-      ...collegeData,
+      ...coachingCenterData,
       educationalInstitutionId: educationalInstitution.id,
     })
     response.ok(post)
@@ -45,25 +45,32 @@ export default class CoachingCentersController {
   async update({ request, response, params }: HttpContext) {
     const postData = await request.validateUsing(postValidator)
     const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
-    const collegeData = await request.validateUsing(coachingCenterValidator)
+    const coachingCenterData = await request.validateUsing(coachingCenterValidator)
 
-    // First find the college record
-    const college = await CoachingCenter.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await EducationalInstitution.findOrFail(
-      college.educationalInstitutionId
-    )
+    // 2. Find the Educational Institution related to base post
+    const educationalInstitution = await EducationalInstitution.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the Coaching Center related to educational institution
+    const coachingCenter = await CoachingCenter.query()
+      .where('educationalInstitutionId', educationalInstitution.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
     await educationalInstitution.merge(educationalInstitutionData).save()
-    await college.merge(collegeData).save()
+    await coachingCenter.merge(coachingCenterData).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...educationalInstitution.toJSON(),
+      ...coachingCenter.toJSON(),
+    })
   }
 
   /**

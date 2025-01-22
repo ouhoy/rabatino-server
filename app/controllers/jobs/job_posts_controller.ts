@@ -39,17 +39,23 @@ export default class JobPostsController {
     const postData = await request.validateUsing(postValidator)
     const jobData = await request.validateUsing(jobPostValidator)
 
-    // First find the job post record
-    const jobPost = await JobPost.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the base post
-    const post = await Post.findOrFail(jobPost.postId)
+    // 2. Find the Job post related to base post
+    const jobPost = await JobPost.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 3. Update both models in order
     await post.merge(postData).save()
     await jobPost.merge(jobData).save()
 
-    response.ok(post)
+    // 4. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...jobPost.toJSON(),
+    })
   }
 
   /**

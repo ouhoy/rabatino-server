@@ -45,25 +45,32 @@ export default class LibrariesController {
   async update({ request, response, params }: HttpContext) {
     const postData = await request.validateUsing(postValidator)
     const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
-    const collegeData = await request.validateUsing(libraryValidator)
+    const libraryData = await request.validateUsing(libraryValidator)
 
-    // First find the college record
-    const college = await Library.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await EducationalInstitution.findOrFail(
-      college.educationalInstitutionId
-    )
+    // 2. Find the Educational Institution related to base post
+    const educationalInstitution = await EducationalInstitution.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the Library related to educational institution
+    const library = await Library.query()
+      .where('educationalInstitutionId', educationalInstitution.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
     await educationalInstitution.merge(educationalInstitutionData).save()
-    await college.merge(collegeData).save()
+    await library.merge(libraryData).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...educationalInstitution.toJSON(),
+      ...library.toJSON(),
+    })
   }
 
   /**

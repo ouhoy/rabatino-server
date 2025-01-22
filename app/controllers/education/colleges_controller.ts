@@ -1,10 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import College from '#models/college'
 import { collegeValidator } from '#validators/education'
-import Post from '#models/post'
 import { postValidator } from '#validators/post'
-import EducationalInstitution from '#models/educational_institution'
 import { educationalInstitutionValidator } from '#validators/educational_institution'
+import Post from '#models/post'
+import EducationalInstitution from '#models/educational_institution'
 
 export default class CollegesController {
   /**
@@ -47,23 +47,30 @@ export default class CollegesController {
     const educationalInstitutionData = await request.validateUsing(educationalInstitutionValidator)
     const collegeData = await request.validateUsing(collegeValidator)
 
-    // First find the college record
-    const college = await College.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await EducationalInstitution.findOrFail(
-      college.educationalInstitutionId
-    )
+    // 2. Find the Educational Institution related to base post
+    const educationalInstitution = await EducationalInstitution.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the College related to educational institution
+    const college = await College.query()
+      .where('educationalInstitutionId', educationalInstitution.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
     await educationalInstitution.merge(educationalInstitutionData).save()
     await college.merge(collegeData).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...educationalInstitution.toJSON(),
+      ...college.toJSON(),
+    })
   }
 
   /**

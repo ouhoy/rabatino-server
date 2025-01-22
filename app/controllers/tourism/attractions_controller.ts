@@ -46,21 +46,30 @@ export default class AttractionsController {
     const tourismContainer = await request.validateUsing(tourismValidator)
     const tourismAttractionPost = await request.validateUsing(touristAttractionValidator)
 
-    // First find the college record
-    const college = await TouristAttraction.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await TourismPost.findOrFail(college.tourismPostId)
+    // 2. Find the Tourism post related to base post
+    const tourismPost = await TourismPost.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the Tourist Attraction related to tourism post
+    const touristAttraction = await TouristAttraction.query()
+      .where('tourismPostId', tourismPost.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
-    await educationalInstitution.merge(tourismContainer).save()
-    await college.merge(tourismAttractionPost).save()
+    await tourismPost.merge(tourismContainer).save()
+    await touristAttraction.merge(tourismAttractionPost).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...tourismPost.toJSON(),
+      ...touristAttraction.toJSON(),
+    })
   }
 
   /**

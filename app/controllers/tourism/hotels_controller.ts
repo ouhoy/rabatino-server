@@ -44,23 +44,32 @@ export default class HotelsController {
   async update({ request, response, params }: HttpContext) {
     const postData = await request.validateUsing(postValidator)
     const tourismContainer = await request.validateUsing(tourismValidator)
-    const tourismAttractionPost = await request.validateUsing(hotelValidator)
+    const hotelData = await request.validateUsing(hotelValidator)
 
-    // First find the college record
-    const college = await Hotel.findOrFail(params.id)
+    // 1. First find the base Post
+    const post = await Post.findOrFail(params.id)
 
-    // Find and update the educational institution
-    const educationalInstitution = await TourismPost.findOrFail(college.tourismPostId)
+    // 2. Find the Tourism post related to base post
+    const tourismPost = await TourismPost.query()
+      .where('postId', post.id)
+      .firstOrFail()
 
-    // Find and update the base post
-    const post = await Post.findOrFail(educationalInstitution.postId)
+    // 3. Find the Hotel related to tourism post
+    const hotel = await Hotel.query()
+      .where('tourismPostId', tourismPost.id)
+      .firstOrFail()
 
-    // Update all three models
+    // 4. Update all three models in order
     await post.merge(postData).save()
-    await educationalInstitution.merge(tourismContainer).save()
-    await college.merge(tourismAttractionPost).save()
+    await tourismPost.merge(tourismContainer).save()
+    await hotel.merge(hotelData).save()
 
-    response.ok(post)
+    // 5. Return the updated data
+    response.ok({
+      ...post.toJSON(),
+      ...tourismPost.toJSON(),
+      ...hotel.toJSON(),
+    })
   }
 
   /**
