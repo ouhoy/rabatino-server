@@ -43,9 +43,7 @@ export default class JobPostsController {
     const post = await Post.findOrFail(params.id)
 
     // 2. Find the Job post related to base post
-    const jobPost = await JobPost.query()
-      .where('postId', post.id)
-      .firstOrFail()
+    const jobPost = await JobPost.query().where('postId', post.id).firstOrFail()
 
     // 3. Update both models in order
     await post.merge(postData).save()

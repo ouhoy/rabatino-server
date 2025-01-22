@@ -50,14 +50,10 @@ export default class HotelsController {
     const post = await Post.findOrFail(params.id)
 
     // 2. Find the Tourism post related to base post
-    const tourismPost = await TourismPost.query()
-      .where('postId', post.id)
-      .firstOrFail()
+    const tourismPost = await TourismPost.query().where('postId', post.id).firstOrFail()
 
     // 3. Find the Hotel related to tourism post
-    const hotel = await Hotel.query()
-      .where('tourismPostId', tourismPost.id)
-      .firstOrFail()
+    const hotel = await Hotel.query().where('tourismPostId', tourismPost.id).firstOrFail()
 
     // 4. Update all three models in order
     await post.merge(postData).save()

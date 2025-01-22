@@ -50,9 +50,7 @@ export default class AttractionsController {
     const post = await Post.findOrFail(params.id)
 
     // 2. Find the Tourism post related to base post
-    const tourismPost = await TourismPost.query()
-      .where('postId', post.id)
-      .firstOrFail()
+    const tourismPost = await TourismPost.query().where('postId', post.id).firstOrFail()
 
     // 3. Find the Tourist Attraction related to tourism post
     const touristAttraction = await TouristAttraction.query()

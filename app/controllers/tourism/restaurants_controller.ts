@@ -50,14 +50,10 @@ export default class RestaurantsController {
     const post = await Post.findOrFail(params.id)
 
     // 2. Find the Tourism post related to base post
-    const tourismPost = await TourismPost.query()
-      .where('postId', post.id)
-      .firstOrFail()
+    const tourismPost = await TourismPost.query().where('postId', post.id).firstOrFail()
 
     // 3. Find the Restaurant related to tourism post
-    const restaurant = await Restaurant.query()
-      .where('tourismPostId', tourismPost.id)
-      .firstOrFail()
+    const restaurant = await Restaurant.query().where('tourismPostId', tourismPost.id).firstOrFail()
 
     // 4. Update all three models in order
     await post.merge(postData).save()
