@@ -20,7 +20,7 @@ export default class PostsController {
     const businessPosts = await BusinessPost.query().exec()
 
     // Format business posts
-    const formattedBusinessPosts = businessPosts.map(post => ({
+    const formattedBusinessPosts = businessPosts.map((post) => ({
       id: post.id,
       typeId: 3,
       title: post.title,
@@ -28,7 +28,7 @@ export default class PostsController {
       featuredImg: post.featuredImg,
       tags: post.tags,
       createdAt: post.createdAt,
-      updatedAt: post.updatedAt
+      updatedAt: post.updatedAt,
     }))
 
     // Process regular posts
@@ -63,9 +63,7 @@ export default class PostsController {
         }
 
         if (post.typeId === 4) {
-          const tourismPost = await TourismPost.query()
-            .where('postId', post.id)
-            .first()
+          const tourismPost = await TourismPost.query().where('postId', post.id).first()
 
           if (tourismPost) {
             cleanPost['tourismType'] = tourismPost.tourismType
@@ -88,10 +86,11 @@ export default class PostsController {
         first_page: 1,
         first_page_url: `?page=1&limit=${limit}`,
         last_page_url: `?page=${Math.ceil(combinedResults.length / limit)}&limit=${limit}`,
-        next_page_url: page * limit < combinedResults.length ? `?page=${page + 1}&limit=${limit}` : null,
+        next_page_url:
+          page * limit < combinedResults.length ? `?page=${page + 1}&limit=${limit}` : null,
         previous_page_url: page > 1 ? `?page=${page - 1}&limit=${limit}` : null,
       },
-      data: combinedResults.slice((page - 1) * limit, page * limit)
+      data: combinedResults.slice((page - 1) * limit, page * limit),
     }
 
     return response.ok(paginationData)
@@ -104,9 +103,7 @@ export default class PostsController {
     const page = request.input('page', 1)
     const limit = request.input('limit', 16)
 
-    const postsResult = await Post.query()
-      .where('typeId', 4)
-      .paginate(page, limit)
+    const postsResult = await Post.query().where('typeId', 4).paginate(page, limit)
 
     const paginationData = {
       meta: {
@@ -160,9 +157,7 @@ export default class PostsController {
     const page = request.input('page', 1)
     const limit = request.input('limit', 16)
 
-    const postsResult = await Post.query()
-      .where('typeId', 2)
-      .paginate(page, limit)
+    const postsResult = await Post.query().where('typeId', 2).paginate(page, limit)
 
     const paginationData = {
       meta: {
@@ -218,9 +213,7 @@ export default class PostsController {
     const page = request.input('page', 1)
     const limit = request.input('limit', 16)
 
-    const postsResult = await Post.query()
-      .where('typeId', 1)
-      .paginate(page, limit)
+    const postsResult = await Post.query().where('typeId', 1).paginate(page, limit)
 
     const paginationData = {
       meta: {
@@ -254,9 +247,7 @@ export default class PostsController {
             updatedAt: post.updatedAt,
           }
 
-          const jobPost = await JobPost.query()
-            .where('postId', post.id)
-            .first()
+          const jobPost = await JobPost.query().where('postId', post.id).first()
 
           if (jobPost) {
             cleanPost['company'] = jobPost.company
@@ -292,12 +283,10 @@ export default class PostsController {
       .paginate(page, limit)
 
     // Get business posts
-    const businessPosts = await BusinessPost.query()
-      .whereILike('title', `%${searchQuery}%`)
-      .exec()
+    const businessPosts = await BusinessPost.query().whereILike('title', `%${searchQuery}%`).exec()
 
     // Format business posts to match required structure
-    const formattedBusinessPosts = businessPosts.map(post => ({
+    const formattedBusinessPosts = businessPosts.map((post) => ({
       id: post.id,
       typeId: 3, // Always set to 3 for business posts
       title: post.title,
@@ -305,7 +294,7 @@ export default class PostsController {
       featuredImg: post.featuredImg,
       tags: post.tags,
       createdAt: post.createdAt,
-      updatedAt: post.updatedAt
+      updatedAt: post.updatedAt,
     }))
 
     // Process regular posts as before
@@ -340,9 +329,7 @@ export default class PostsController {
         }
 
         if (post.typeId === 4) {
-          const tourismPost = await TourismPost.query()
-            .where('postId', post.id)
-            .first()
+          const tourismPost = await TourismPost.query().where('postId', post.id).first()
 
           if (tourismPost) {
             cleanPost['tourismType'] = tourismPost.tourismType
@@ -365,10 +352,11 @@ export default class PostsController {
         first_page: 1,
         first_page_url: `?page=1&limit=${limit}`,
         last_page_url: `?page=${Math.ceil(combinedResults.length / limit)}&limit=${limit}`,
-        next_page_url: page * limit < combinedResults.length ? `?page=${page + 1}&limit=${limit}` : null,
+        next_page_url:
+          page * limit < combinedResults.length ? `?page=${page + 1}&limit=${limit}` : null,
         previous_page_url: page > 1 ? `?page=${page - 1}&limit=${limit}` : null,
       },
-      data: combinedResults.slice((page - 1) * limit, page * limit)
+      data: combinedResults.slice((page - 1) * limit, page * limit),
     }
 
     return response.ok(paginationData)
