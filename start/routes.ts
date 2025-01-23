@@ -143,6 +143,9 @@ router
 router
   .group(() => {
     router.get('/', [PostsController, 'index'])
+    router.get('/tourism', [PostsController, 'tourismPosts'])
+    router.get('/education', [PostsController, 'educationalPosts'])
+    router.get('/jobs', [PostsController, 'jobPosts'])
     router.delete('/:id', [PostsController, 'destroy'])
   })
   .prefix('/posts')
