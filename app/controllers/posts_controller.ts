@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Post from '#models/post'
 import EducationalInstitution from '#models/educational_institution'
 import TourismPost from '#models/tourism_post'
+import JobPost from '#models/job_post'
 
 export default class PostsController {
   /**
@@ -193,7 +194,7 @@ export default class PostsController {
     const limit = request.input('limit', 16)
 
     const postsResult = await Post.query()
-      .where('typeId', 3)
+      .where('typeId', 1)
       .paginate(page, limit)
 
     const paginationData = {
@@ -226,6 +227,22 @@ export default class PostsController {
             featuredImage: post.featuredImage,
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
+          }
+
+          const jobPost = await JobPost.query()
+            .where('postId', post.id)
+            .first()
+
+          if (jobPost) {
+            cleanPost['company'] = jobPost.company
+            cleanPost['logo'] = jobPost.logo
+            cleanPost['salary'] = jobPost.salary
+            cleanPost['jobType'] = jobPost.jobType
+            cleanPost['workLocation'] = jobPost.workLocation
+            cleanPost['requirements'] = jobPost.requirements
+            cleanPost['applicationLink'] = jobPost.applicationLink
+            cleanPost['expiryDate'] = jobPost.expiryDate
+            cleanPost['isActive'] = jobPost.isActive
           }
 
           return cleanPost
