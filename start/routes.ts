@@ -36,10 +36,10 @@ router.get('/', async () => {
 router
   .group(() => {
     router.get('/', [BusinessPostsController, 'index'])
-    router.post('/', [BusinessPostsController, 'store']).use(middleware.auth())
+    router.post('/', [BusinessPostsController, 'store'])
     router.get('/:id', [BusinessPostsController, 'show'])
-    router.put('/:id', [BusinessPostsController, 'update']).use(middleware.auth())
-    router.delete('/:id', [BusinessPostsController, 'destroy']).use(middleware.auth())
+    router.put('/:id', [BusinessPostsController, 'update'])
+    router.delete('/:id', [BusinessPostsController, 'destroy'])
   })
   .prefix('/business')
 
@@ -49,50 +49,50 @@ router
     router
       .group(() => {
         router.get('/', [UniversitiesController, 'index'])
-        router.post('/', [UniversitiesController, 'store']).use(middleware.auth())
+        router.post('/', [UniversitiesController, 'store'])
         router.get('/:id', [UniversitiesController, 'show'])
-        router.put('/:id', [UniversitiesController, 'update']).use(middleware.auth())
-        router.delete('/:id', [UniversitiesController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [UniversitiesController, 'update'])
+        router.delete('/:id', [UniversitiesController, 'destroy'])
       })
       .prefix('/universities')
 
     router
       .group(() => {
         router.get('/', [CollegesController, 'index'])
-        router.post('/', [CollegesController, 'store']).use(middleware.auth())
+        router.post('/', [CollegesController, 'store'])
         router.get('/:id', [CollegesController, 'show'])
-        router.put('/:id', [CollegesController, 'update']).use(middleware.auth())
-        router.delete('/:id', [CollegesController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [CollegesController, 'update'])
+        router.delete('/:id', [CollegesController, 'destroy'])
       })
       .prefix('/colleges')
 
     router
       .group(() => {
         router.get('/', [LibrariesController, 'index'])
-        router.post('/', [LibrariesController, 'store']).use(middleware.auth())
+        router.post('/', [LibrariesController, 'store'])
         router.get('/:id', [LibrariesController, 'show'])
-        router.put('/:id', [LibrariesController, 'update']).use(middleware.auth())
-        router.delete('/:id', [LibrariesController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [LibrariesController, 'update'])
+        router.delete('/:id', [LibrariesController, 'destroy'])
       })
       .prefix('/libraries')
 
     router
       .group(() => {
         router.get('/', [StudyCentersController, 'index'])
-        router.post('/', [StudyCentersController, 'store']).use(middleware.auth())
+        router.post('/', [StudyCentersController, 'store'])
         router.get('/:id', [StudyCentersController, 'show'])
-        router.put('/:id', [StudyCentersController, 'update']).use(middleware.auth())
-        router.delete('/:id', [StudyCentersController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [StudyCentersController, 'update'])
+        router.delete('/:id', [StudyCentersController, 'destroy'])
       })
       .prefix('/study-centers')
 
     router
       .group(() => {
         router.get('/', [CoachingCentersController, 'index'])
-        router.post('/', [CoachingCentersController, 'store']).use(middleware.auth())
+        router.post('/', [CoachingCentersController, 'store'])
         router.get('/:id', [CoachingCentersController, 'show'])
-        router.put('/:id', [CoachingCentersController, 'update']).use(middleware.auth())
-        router.delete('/:id', [CoachingCentersController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [CoachingCentersController, 'update'])
+        router.delete('/:id', [CoachingCentersController, 'destroy'])
       })
       .prefix('/coaching-centers')
   })
@@ -102,10 +102,10 @@ router
 router
   .group(() => {
     router.get('/', [JobPostsController, 'index'])
-    router.post('/', [JobPostsController, 'store']).use(middleware.auth())
+    router.post('/', [JobPostsController, 'store'])
     router.get('/:id', [JobPostsController, 'show'])
-    router.put('/:id', [JobPostsController, 'update']).use(middleware.auth())
-    router.delete('/:id', [JobPostsController, 'destroy']).use(middleware.auth())
+    router.put('/:id', [JobPostsController, 'update'])
+    router.delete('/:id', [JobPostsController, 'destroy'])
   })
   .prefix('/jobs')
 
@@ -115,30 +115,30 @@ router
     router
       .group(() => {
         router.get('/', [HotelsController, 'index'])
-        router.post('/', [HotelsController, 'store']).use(middleware.auth())
+        router.post('/', [HotelsController, 'store'])
         router.get('/:id', [HotelsController, 'show'])
-        router.put('/:id', [HotelsController, 'update']).use(middleware.auth())
-        router.delete('/:id', [HotelsController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [HotelsController, 'update'])
+        router.delete('/:id', [HotelsController, 'destroy'])
       })
       .prefix('/hotels')
 
     router
       .group(() => {
         router.get('/', [RestaurantsController, 'index'])
-        router.post('/', [RestaurantsController, 'store']).use(middleware.auth())
+        router.post('/', [RestaurantsController, 'store'])
         router.get('/:id', [RestaurantsController, 'show'])
-        router.put('/:id', [RestaurantsController, 'update']).use(middleware.auth())
-        router.delete('/:id', [RestaurantsController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [RestaurantsController, 'update'])
+        router.delete('/:id', [RestaurantsController, 'destroy'])
       })
       .prefix('/restaurants')
 
     router
       .group(() => {
         router.get('/', [AttractionsController, 'index'])
-        router.post('/', [AttractionsController, 'store']).use(middleware.auth())
+        router.post('/', [AttractionsController, 'store'])
         router.get('/:id', [AttractionsController, 'show'])
-        router.put('/:id', [AttractionsController, 'update']).use(middleware.auth())
-        router.delete('/:id', [AttractionsController, 'destroy']).use(middleware.auth())
+        router.put('/:id', [AttractionsController, 'update'])
+        router.delete('/:id', [AttractionsController, 'destroy'])
       })
       .prefix('/attractions')
   })
@@ -151,10 +151,10 @@ router
     router.get('/tourism', [PostsController, 'tourismPosts'])
     router.get('/education', [PostsController, 'educationalPosts'])
     router.get('/jobs', [PostsController, 'jobPosts'])
-    router.delete('/:id', [PostsController, 'destroy']).use(middleware.auth())
+    router.delete('/:id', [PostsController, 'destroy'])
   })
   .prefix('/posts')
-  .use(middleware.auth())
+
 
 router
   .group(() => {
@@ -164,6 +164,6 @@ router
     router.get('/login', [LoginController, 'show']).use(middleware.guest())
     router.post('/login', [LoginController, 'store']).use(middleware.guest())
 
-    router.post('/logout', [LogoutController, 'handle']).use(middleware.auth())
+    router.post('/logout', [LogoutController, 'handle'])
   })
   .prefix('/auth')
