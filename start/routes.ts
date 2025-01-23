@@ -143,6 +143,7 @@ router
 router
   .group(() => {
     router.get('/', [PostsController, 'index'])
+    router.get('/search', [PostsController, 'search'])
     router.get('/tourism', [PostsController, 'tourismPosts'])
     router.get('/education', [PostsController, 'educationalPosts'])
     router.get('/jobs', [PostsController, 'jobPosts'])
