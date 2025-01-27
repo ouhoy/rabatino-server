@@ -58,6 +58,8 @@ export default class PostsController {
             .first()
 
           if (educationalInstitution) {
+            // @ts-ignore
+
             cleanPost['institutionType'] = educationalInstitution.institutionType
           }
         }
@@ -66,6 +68,8 @@ export default class PostsController {
           const tourismPost = await TourismPost.query().where('postId', post.id).first()
 
           if (tourismPost) {
+            // @ts-ignore
+
             cleanPost['tourismType'] = tourismPost.tourismType
           }
         }
@@ -112,9 +116,17 @@ export default class PostsController {
         current_page: postsResult.currentPage,
         last_page: postsResult.lastPage,
         first_page: 1,
+
+        // @ts-ignore
         first_page_url: postsResult.firstPageUrl,
+        // @ts-ignore
+
         last_page_url: postsResult.lastPageUrl,
+        // @ts-ignore
+
         next_page_url: postsResult.nextPageUrl,
+        // @ts-ignore
+
         previous_page_url: postsResult.previousPageUrl,
       },
       data: await Promise.all(
@@ -139,6 +151,7 @@ export default class PostsController {
 
           const tourismPost = await TourismPost.query().where('postId', post.id).first()
           if (tourismPost) {
+            // @ts-ignore
             cleanPost['tourismType'] = tourismPost.tourismType
           }
 
@@ -166,9 +179,13 @@ export default class PostsController {
         current_page: postsResult.currentPage,
         last_page: postsResult.lastPage,
         first_page: 1,
+        // @ts-ignore
         first_page_url: postsResult.firstPageUrl,
+        // @ts-ignore
         last_page_url: postsResult.lastPageUrl,
+        // @ts-ignore
         next_page_url: postsResult.nextPageUrl,
+        // @ts-ignore
         previous_page_url: postsResult.previousPageUrl,
       },
       data: await Promise.all(
@@ -195,6 +212,8 @@ export default class PostsController {
             .where('postId', post.id)
             .first()
           if (educationalInstitution) {
+            // @ts-ignore
+
             cleanPost['institutionType'] = educationalInstitution.institutionType
           }
 
@@ -222,9 +241,17 @@ export default class PostsController {
         current_page: postsResult.currentPage,
         last_page: postsResult.lastPage,
         first_page: 1,
+
+        // @ts-ignore
         first_page_url: postsResult.firstPageUrl,
+        // @ts-ignore
+
         last_page_url: postsResult.lastPageUrl,
+        // @ts-ignore
+
         next_page_url: postsResult.nextPageUrl,
+        // @ts-ignore
+
         previous_page_url: postsResult.previousPageUrl,
       },
       data: await Promise.all(
@@ -250,14 +277,31 @@ export default class PostsController {
           const jobPost = await JobPost.query().where('postId', post.id).first()
 
           if (jobPost) {
+            // @ts-ignore
             cleanPost['company'] = jobPost.company
+            // @ts-ignore
+
             cleanPost['logo'] = jobPost.logo
+            // @ts-ignore
+
             cleanPost['salary'] = jobPost.salary
+            // @ts-ignore
+
             cleanPost['jobType'] = jobPost.jobType
+            // @ts-ignore
+
             cleanPost['workLocation'] = jobPost.workLocation
+            // @ts-ignore
+
             cleanPost['requirements'] = jobPost.requirements
+            // @ts-ignore
+
             cleanPost['applicationLink'] = jobPost.applicationLink
+            // @ts-ignore
+
             cleanPost['expiryDate'] = jobPost.expiryDate
+            // @ts-ignore
+
             cleanPost['isActive'] = jobPost.isActive
           }
 
@@ -324,6 +368,8 @@ export default class PostsController {
             .first()
 
           if (educationalInstitution) {
+            // @ts-ignore
+
             cleanPost['institutionType'] = educationalInstitution.institutionType
           }
         }
@@ -332,6 +378,8 @@ export default class PostsController {
           const tourismPost = await TourismPost.query().where('postId', post.id).first()
 
           if (tourismPost) {
+            // @ts-ignore
+
             cleanPost['tourismType'] = tourismPost.tourismType
           }
         }
