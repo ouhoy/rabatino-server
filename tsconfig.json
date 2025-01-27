@@ -3,5 +3,9 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "./build"
-  }
+  },
+  "exclude": [
+    "./app/controllers/posts_controller.ts",
+    "app/controllers/posts_controller.ts"
+  ]
 }
